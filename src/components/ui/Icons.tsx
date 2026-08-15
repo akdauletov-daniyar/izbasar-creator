@@ -24,14 +24,6 @@ export function ArrowRight({ width = 18, height = 18, ...props }: IconProps) {
   )
 }
 
-export function ArrowUpRight({ width = 18, height = 18, ...props }: IconProps) {
-  return (
-    <svg {...base} width={width} height={height} {...props}>
-      <path d="M7 17 17 7M8 7h9v9" />
-    </svg>
-  )
-}
-
 export function Play({ width = 18, height = 18, ...props }: IconProps) {
   return (
     <svg

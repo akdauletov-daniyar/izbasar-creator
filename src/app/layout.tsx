@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Inter, Unbounded } from 'next/font/google'
 import { site } from '@/content/site'
+import { siteUrl } from '@/lib/site-url'
 import './globals.css'
 
 /* Основной шрифт — заголовки, кнопки, цифры (design-system.md §3.1) */
@@ -17,8 +18,11 @@ const inter = Inter({
   display: 'swap',
 })
 
+const ogImage = '/images/izbasar_suit.jpg'
+
 export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
+  metadataBase: new URL(siteUrl),
+  alternates: { canonical: '/' },
   title: {
     default: site.meta.title,
     template: `%s — ${site.name}`,
@@ -36,17 +40,17 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: site.locale,
-    url: site.url,
+    url: '/',
     title: site.meta.title,
     description: site.meta.description,
     siteName: site.name,
-    images: [{ url: '/images/izbasar_suit.jpg', width: 768, height: 1024, alt: site.name }],
+    images: [{ url: ogImage, width: 768, height: 1024, alt: site.name }],
   },
   twitter: {
     card: 'summary_large_image',
     title: site.meta.title,
     description: site.meta.description,
-    images: ['/images/izbasar_suit.jpg'],
+    images: [ogImage],
   },
   robots: { index: true, follow: true },
 }
@@ -62,8 +66,8 @@ const personSchema = {
   name: site.name,
   jobTitle: 'Психолог, КПТ-терапевт, ICF-коуч',
   description: site.meta.description,
-  url: site.url,
-  image: `${site.url}/images/izbasar_suit.jpg`,
+  url: siteUrl,
+  image: `${siteUrl}${ogImage}`,
   knowsAbout: [
     'Когнитивно-поведенческая терапия',
     'Коучинг',

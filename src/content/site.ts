@@ -17,8 +17,6 @@ export const TODO = 'Уточняется'
 export const site = {
   name: 'Избасар Мамыров',
   shortName: 'Избасар',
-  role: 'Психолог · КПТ-терапевт · ICF-коуч',
-  url: 'https://izbasar.kz',
   locale: 'ru_RU',
 
   meta: {
@@ -157,7 +155,7 @@ export const site = {
     embedUrl:
       'https://www.youtube.com/embed/9SkViTOsVJ8?autoplay=1&rel=0&modestbranding=1&playsinline=1',
     poster: {
-      src: '/images/camera_monitor.png',
+      src: '/images/camera_monitor.jpg',
       alt: 'Съёмка видео «Как изменить свою жизнь через изменение состояния»',
     },
   },

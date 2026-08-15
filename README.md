@@ -90,13 +90,30 @@ public/images/      фотографии из assets/
 Ключевое правило при доработках: **`#2D6A4F` — только заливка** (2.9 : 1 на фоне `#131516`).
 Акцент как текст — `--color-accent-ink` (`#52B788`, 7.4 : 1) или утилита `.accent`.
 
-## Деплой
-
-Проект статический — подходит любой хостинг с поддержкой Next.js:
+## Деплой на Vercel
 
 ```bash
 npx vercel
 ```
 
-Для полностью статичной выгрузки достаточно добавить `output: 'export'` в `next.config.mjs`
-и `images.unoptimized = true`.
+Настроек в дашборде не нужно — Vercel определит Next.js сам. Единственная переменная:
+
+| Переменная | Значение | Где |
+| --- | --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | `https://izbasar.kz` | Settings → Environment Variables → **Production** |
+
+Без неё сайт возьмёт адрес деплоя из `VERCEL_URL` — работать будет, но `canonical`,
+`og:image` и `sitemap.xml` укажут на технический домен `*.vercel.app`.
+
+Что уже сделано под Vercel:
+
+- `robots.txt` и `sitemap.xml` генерируются из адреса окружения (`src/app/robots.ts`,
+  `src/app/sitemap.ts`). **Preview-деплои закрыты от индексации** — иначе они конкурируют
+  с продакшном в выдаче.
+- Заголовки безопасности и `Cache-Control: immutable` для `/images/*` — в `next.config.mjs`.
+- `images.deviceSizes` сокращён до реальных точек макета: Vercel тарифицирует трансформации
+  изображений поштучно, и лишние ширины — это лишние деньги.
+- `.vercelignore` исключает `assets/`, `context/` и макет из загрузки.
+
+Для статичной выгрузки на другой хостинг: `output: 'export'` в `next.config.mjs`
+и `images.unoptimized = true` (тогда оптимизация картинок отключится).
