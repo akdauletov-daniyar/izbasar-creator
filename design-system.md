@@ -172,7 +172,7 @@ The source highlights **one phrase per heading** in the accent color, always the
 Reproduce this with `--accent-400` (`#52B788`), never `--accent-600` — see §2.3.
 
 ```html
-<h2 class="h2">Меня зовут <span class="accent">Избасар Мәмыров</span></h2>
+<h2 class="h2">Меня зовут <span class="accent">Избасар Мамыров</span></h2>
 ```
 
 ### 3.4 Measure
@@ -218,22 +218,67 @@ Recurring column splits from the source:
 
 | Gap | Value |
 | --- | --- |
-| Section padding (desktop) | `120px` top / `120px` bottom |
-| Section padding (mobile) | `72px` / `72px` |
+| Section padding | `clamp(44px, 5vw, 72px)` top and bottom |
+| **Resulting gap between sections** | `88px` mobile → `144px` desktop |
+| Sub-block inside a section | `48px` mobile → `64px` desktop |
 | Heading → body | `20px` |
 | Body → CTA | `32px` |
 | Card grid gap | `24px` |
 | Checklist item gap | `20px` |
 | Eyebrow → heading | `16px` |
 
+**Section padding is half the visible gap.** Adjacent sections stack their bottom and top
+padding, so a `120px` section pad reads as a `240px` void — enough to make the page feel like
+disconnected fragments rather than one argument. Set the padding to half of the gap you actually
+want to see, and check the rendered distance between two sections, never the token in isolation.
+
 ### 4.4 Breakpoints
 
 ```css
---bp-sm: 480px;   /* single column, 16px gutter */
---bp-md: 768px;   /* 2-col cards, portraits stack under copy */
---bp-lg: 1024px;  /* full 12-col grid engages */
+--bp-sm: 480px;   /* large phone */
+--bp-md: 768px;   /* tablet — 12-col grid engages */
+--bp-lg: 1024px;  /* desktop — asymmetric layouts, horizontal nav */
 --bp-xl: 1280px;  /* container hits max width */
 ```
+
+Four layout states. The grid engages at **md**, not lg — a 768px tablet is a wide screen and
+must not be served the phone stack.
+
+| Range | Device | Layout |
+| --- | --- | --- |
+| < 480 | phone | Single column. CTAs full-width stacked; buttons wrap to two lines rather than overflow. |
+| 480–767 | large phone | Single column still — two-column lists at this width leave 3–4 words per line. |
+| 768–1023 | tablet | 12-col grid on. Symmetric splits (7/5, 6/6), 2-col card grids, 3-across feature rows. Hero stays stacked, portrait becomes a 16:9 band. Nav stays behind the hamburger. |
+| ≥ 1024 | desktop | Asymmetric splits from §4.2 (5/3/4, 7/5 with row spans). Horizontal nav. Hero portrait moves to the right half of the panel. |
+| ≥ 1280 | wide | Container pinned to 1200 / panels to 1360, centered. |
+
+**Fluid, not stepped.** Gutter and section rhythm interpolate rather than jumping at breakpoints:
+
+```css
+--gutter: clamp(20px, 3.4vw, 64px);
+--panel-inset: clamp(10px, 1.6vw, 20px);
+.section { padding-block: clamp(64px, 8vw, 120px); }
+```
+
+### 4.5 The shared vertical rule
+
+Panels are wider than page content (1360 vs 1200), so panel content would otherwise sit on a
+different left edge than section headings. Because both containers are centered in the viewport,
+an inner block inside the panel can be made to land on exactly the page-content edge at every
+width:
+
+```css
+.panel-inner {
+  width: 100%;
+  max-width: calc(var(--container-max) + 2 * (var(--gutter) - var(--panel-inset)));
+  margin-inline: auto;
+  padding-inline: calc(var(--gutter) - var(--panel-inset));
+}
+```
+
+The nav wordmark, hero eyebrow, every section eyebrow and the footer wordmark share one x
+coordinate from 360px to 1920px. Anything that would shift a panel's content box off that rule —
+notably a 1px `border` — must be expressed as an inset `box-shadow` instead.
 
 ---
 
@@ -284,7 +329,11 @@ On a `#131516` canvas, shadows read as *depth*, not as edges. Keep them soft, la
 - Any text over an image requires `--gradient-fade`.
 - On dark, apply a subtle unify pass: `filter: saturate(0.95) contrast(1.02)` and a `--white-04` inner ring so edges do not disappear into the background.
 
-**Decorative marks.** The source uses an oversized ghost wordmark (`JAMES DAVID`) at ~4% opacity behind the hero, and a low-opacity geometric glyph in the lower left. Dark-theme equivalents: `rgba(255,255,255,0.04)` for the ghost wordmark, `--accent-800` for the glyph.
+**Decorative marks.** The source uses an oversized ghost wordmark at ~4% opacity behind the hero
+and a low-opacity glyph in the lower left. **Not reproduced.** Both sit behind live text — the
+hero stats and the footer legal row — and layering decorative type under content is exactly the
+kind of overlap this system forbids. Depth on dark comes from surface steps (§2.1), not from
+stacked type.
 
 ---
 
@@ -346,18 +395,27 @@ Hover: background → `--surface-2`, `translateY(-2px)`, `--shadow-md`, arrow sh
 
 **Logo strip:** single row, logos at `--text-muted` equivalent opacity (`opacity: .55`, `filter: grayscale(1) brightness(1.8)` for dark), `48px` gaps, max height 28px, full opacity on hover. Marquee-scrolls on mobile.
 
-### 7.4 Hero panel
+### 7.4 Hero
 
-The signature element. `--gradient-hero` background, `--radius-2xl`, inset `20px` from viewport, `min-height: 640px`, nav inside the top.
+The signature element. `--gradient-hero` background, **full-bleed — no viewport inset and no
+corner radius**, `min-height: 600px`, the fixed nav lying over the top of it.
+
+Full-bleed is a hard requirement, not a preference: the nav is a fixed, full-width bar, so an
+inset panel with a 40px radius cuts the corner out from under the nav's CTA pill and the pill
+floats on the page background. A full-width hero and a full-width nav share the same edges.
 
 ```
-padding:        56px 56px 72px   (desktop)
+content:        .container-page — same vertical rule as every section (§4.5)
 headline:       display style, --text-primary, max 3 lines, 6/12 width
-subhead:        body-lg, --text-secondary, 32rem max-width, 20px below headline
-CTA:            48px below subhead — ghost pill with play circle
-portrait:       right 6/12, bottom-aligned, bleeds above the panel's top edge
-ghost wordmark: Unbounded 800, ~180px, rgba(255,255,255,0.04), behind the portrait
+subhead:        body-lg, 32rem max-width, 20px below headline
+CTA row:        stacked < 768px; row + flex-wrap above — the 6/12 column is
+                narrower than two Cyrillic labels at 1024px
+portrait:       right 6/12, bottom-aligned, masked out at the bottom
+bottom edge:    180px gradient into --bg so the full-bleed block does not end
+                on a hard horizontal seam
 ```
+
+No decorative type sits behind hero content — see §6.
 
 ### 7.5 Inline CTA panel
 
@@ -380,13 +438,14 @@ Error: border `--danger`, message in `caption` `--danger`, `8px` below.
 `--bg` background, `1px` top border `--border-subtle`, `80px` top padding.
 Row 1: newsletter block right-aligned, heading in `h4`.
 Row 2: nav links spread edge to edge, `nav-link` style in `--text-secondary`.
-Row 3: `1px --border-subtle` divider, then `caption` legal text in `--text-muted`, right-aligned.
+Row 3: `1px --border-subtle` divider, then legal text at `body-sm` in `--text-muted`, right-aligned — 14px is the floor for `--text-muted` (§2.2), so this row does not drop to `caption`.
 An oversized ghost wordmark in `rgba(255,255,255,0.03)` may bleed off the bottom edge.
 
 ### 7.8 Section header
 
 ```
-[eyebrow]  ——— About me        ← 32px rule in --border-strong + eyebrow in --text-muted
+[eyebrow]  ——— About me        ← 32px rule in --border-strong + eyebrow in --text-secondary
+                                 (13px, so --text-muted is off-limits per §2.2)
 [heading]  h2, one phrase in --accent-400
 [body]     body-lg, --text-secondary, 36rem max
 [action]   optional secondary pill, right-aligned on desktop
@@ -404,10 +463,15 @@ An oversized ghost wordmark in `rgba(255,255,255,0.03)` may bleed off the bottom
 --dur-slow:   420ms;   /* panel/sheet entrance */
 ```
 
-- Hover transitions: `--dur-base --ease-out`, transform + background only.
-- Scroll reveal: `opacity 0→1`, `translateY(16px→0)`, `--dur-slow`, staggered `60ms` per sibling. Once, never on scroll-back.
+**No scroll-triggered motion.** Content is rendered at full opacity in its final position — nothing
+fades or slides in as the page scrolls. Scroll-linked reveals delay reading, misfire on fast
+scrolls and on restored scroll positions, and force otherwise-static sections to ship client-side
+JavaScript. Motion is reserved for direct interaction.
+
+- Hover transitions: `--dur-base --ease-out`, transform + background only, inside `@media (hover: hover)`.
+- Opening/closing surfaces (mobile sheet, video modal): `--dur-slow`, transform + opacity.
 - Never animate `width`/`height`/`top`/`left` — transform and opacity only.
-- Honor `prefers-reduced-motion: reduce` by dropping transforms and stagger, keeping opacity fades at `--dur-fast`.
+- `prefers-reduced-motion: reduce` collapses all remaining transitions and disables smooth scrolling.
 
 ---
 
@@ -416,10 +480,20 @@ An oversized ghost wordmark in `rgba(255,255,255,0.03)` may bleed off the bottom
 1. Body text ≥ 16px; `--text-secondary` is the floor for prose (8.5 : 1).
 2. `--accent-600` is a fill color only. Accent *text* is `--accent-400` (7.4 : 1). Verified in §2.3.
 3. Focus is always visible: `2px` `--focus-ring` outline at `3px` offset. Never `outline: none` without a replacement.
-4. Interactive targets ≥ 44×44px, including the trailing icon circles.
-5. Accent color never carries meaning alone — pair with an icon or label.
-6. Text over photography requires `--gradient-fade`; re-verify 4.5 : 1 against the darkest scrim point.
-7. Headings descend in order; the accent `<span>` inside a heading is decorative and must not break the heading's reading order.
+4. Interactive targets ≥ 44×44px, including the trailing icon circles. Where a spec'd control is
+   smaller — the 40px newsletter submit (§7.6) — keep the visual size and expand the hit area with
+   an inset pseudo-element. Inline nav links carry `min-height: 44px` without changing their
+   visual height.
+5. Hover effects live inside `@media (hover: hover)`. On touch, `:hover` latches after a tap and
+   leaves cards stuck in their raised state; touch gets `:active` feedback instead.
+6. Accent color never carries meaning alone — pair with an icon or label.
+7. Text over photography requires `--gradient-fade`; re-verify 4.5 : 1 against the darkest scrim point.
+8. Headings descend in order; the accent `<span>` inside a heading is decorative and must not break the heading's reading order.
+9. Full-height sheets scroll internally (`overflow-y: auto`) and pad against
+   `env(safe-area-inset-bottom)` — a landscape phone is only ~390px tall.
+10. `position: fixed` overlays must not be descendants of an element with `backdrop-filter`,
+    `filter`, or `transform`: those create a containing block and re-anchor the overlay to that
+    element instead of the viewport.
 
 ---
 
