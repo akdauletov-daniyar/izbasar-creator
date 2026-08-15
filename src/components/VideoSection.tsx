@@ -73,7 +73,7 @@ export function VideoSection() {
                 <Play width={20} height={20} />
               </span>
 
-              <span className="absolute bottom-5 left-5 z-2 inline-flex h-9 items-center rounded-full bg-black/55 px-4 font-display text-caption text-ink backdrop-blur-sm">
+              <span className="absolute bottom-5 left-5 z-2 inline-flex h-9 items-center rounded-md bg-black/55 px-4 font-display text-caption text-ink backdrop-blur-sm">
                 {video.duration}
               </span>
             </button>
@@ -137,7 +137,7 @@ export function VideoSection() {
                 ref={closeRef}
                 type="button"
                 onClick={() => setOpen(false)}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line-strong bg-surface-1 text-ink transition-colors hover:bg-surface-2"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line-strong bg-surface-1 text-ink transition-colors hover:bg-surface-2"
                 aria-label="Закрыть"
               >
                 <Close />

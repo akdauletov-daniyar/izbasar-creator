@@ -32,10 +32,7 @@ export function Consultation() {
         <ol className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {consultation.steps.map((step, index) => (
             <li key={step.title} className="card card-hover flex h-full flex-col p-7">
-              <span
-                className="font-display text-h4 font-semibold text-accent-ink"
-                aria-hidden="true"
-              >
+              <span className="font-display text-h4 text-accent-ink" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')}
               </span>
               <h4 className="mt-4 text-h4">{step.title}</h4>

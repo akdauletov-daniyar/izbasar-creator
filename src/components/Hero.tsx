@@ -25,7 +25,7 @@ export function Hero() {
 
           {/* В строку с 768px; flex-wrap обязателен — на 1024px текстовая колонка
               уже двух подписей, и без переноса вторая кнопка залезала на портрет */}
-          <div className="mt-10 flex flex-col gap-3 md:mt-12 md:flex-row md:flex-wrap md:items-center md:gap-4">
+          <div className="mt-8 flex flex-col gap-3 md:mt-10 md:flex-row md:flex-wrap md:items-center md:gap-4">
             <Button href={hero.primaryCta.href} variant="inverted">
               {hero.primaryCta.label}
             </Button>
@@ -34,13 +34,30 @@ export function Hero() {
             </Button>
           </div>
 
-          <dl className="mt-12 flex flex-wrap items-start gap-x-12 gap-y-6 border-t border-white/10 pt-8 md:mt-14 md:gap-x-16">
-            {hero.stats.map((stat) => (
-              <div key={stat.label}>
+          {/*
+            Четыре показателя с вертикальным разделителем между колонками.
+            Сетка 2×2, а не строка из четырёх: колонка 6/12 — это ~146px на пункт,
+            а «Сертифицированный» требует ~145px и упирается в разделитель.
+            Два столбца дают подписи целую строку на десктопе.
+          */}
+          <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-t border-white/10 pt-7 md:mt-12 md:gap-x-10">
+            {hero.stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className={index % 2 === 1 ? 'border-l border-white/15 pl-6 md:pl-10' : ''}
+              >
                 <dt className="sr-only">{stat.label}</dt>
                 <dd>
-                  <span className="block font-display text-stat text-ink">{stat.value}</span>
-                  <span className="mt-1 block text-body-sm text-white/60">{stat.label}</span>
+                  <span
+                    className={`block font-display text-stat ${
+                      stat.accent ? 'text-accent-200' : 'text-ink'
+                    }`}
+                  >
+                    {stat.value}
+                  </span>
+                  <span className="mt-2 block text-body-sm leading-snug text-white/60">
+                    {stat.label}
+                  </span>
                 </dd>
               </div>
             ))}

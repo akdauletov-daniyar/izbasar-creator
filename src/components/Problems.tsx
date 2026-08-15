@@ -1,23 +1,24 @@
-import Image from 'next/image'
 import { site } from '@/content/site'
 import { Button } from './ui/Button'
 import { Check, featureIcons } from './ui/Icons'
 
-/** Раздел «С чем я работаю» — раскладка 5/3/4 (design-system.md §4.2) */
+/**
+ * Раздел «С чем я работаю» — без фотографии.
+ * Освободившуюся ширину отдаём тексту: питч и чеклист встают в строку,
+ * три пункта разворачиваются на всю ширину под ними.
+ */
 export function Problems() {
   const { problems } = site
 
   return (
     <section className="section">
       <div className="container-page">
-        {/* Планшет: копия 7 / фото 5, пункты — строкой из трёх ниже.
-            Десктоп: 5 / 3 / 4 в одну строку (§4.2). */}
-        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-10 md:gap-y-14 lg:gap-8">
-          {/* Копия + чеклист */}
-          <div className="md:col-span-7 lg:col-span-5">
+        <div className="grid grid-cols-1 gap-12 md:grid-cols-12 md:gap-x-10 md:gap-y-14">
+          {/* Питч */}
+          <div className="md:col-span-12 lg:col-span-6">
             <span className="eyebrow">{problems.eyebrow}</span>
 
-            <h2 className="mt-4 max-w-[14ch] text-h2">
+            <h2 className="mt-4 max-w-[15ch] text-h2">
               {problems.titleLead} <span className="accent">{problems.titleAccent}</span>
             </h2>
 
@@ -28,35 +29,25 @@ export function Problems() {
                 {problems.cta.label}
               </Button>
             </div>
+          </div>
 
-            <ul className="mt-10 flex flex-col gap-5">
+          {/* Чеклист — рядом с питчем на десктопе, прижат к нижней кромке строки */}
+          <div className="md:col-span-12 lg:col-span-5 lg:col-start-8 lg:self-end lg:pb-1">
+            <ul className="flex flex-col gap-5">
               {problems.checklist.map((item) => (
                 <li key={item} className="flex gap-3">
                   <span className="check-bullet">
                     <Check />
                   </span>
-                  <span className="max-w-[30rem] text-body-sm text-ink-secondary">{item}</span>
+                  <span className="max-w-[32rem] text-body-sm text-ink-secondary">{item}</span>
                 </li>
               ))}
             </ul>
           </div>
 
-          {/* Фотография */}
-          <div className="md:col-span-5 lg:col-span-3">
-            <div className="media media-xl relative aspect-3/4 w-full md:h-full md:aspect-auto md:min-h-[420px] lg:min-h-0">
-              <Image
-                src={problems.image.src}
-                alt={problems.image.alt}
-                fill
-                sizes="(max-width: 767px) 92vw, (max-width: 1023px) 40vw, 25vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-
-          {/* Пункты с иконками */}
-          <div className="md:col-span-12 lg:col-span-4">
-            <ul className="flex flex-col gap-8 md:grid md:grid-cols-3 md:gap-8 lg:flex lg:flex-col">
+          {/* Три пункта во всю ширину */}
+          <div className="md:col-span-12 lg:border-t lg:border-line-subtle lg:pt-14">
+            <ul className="grid grid-cols-1 gap-10 md:grid-cols-3 md:gap-8 lg:gap-12">
               {problems.items.map((item) => {
                 const Icon = featureIcons[item.icon]
                 return (
@@ -64,8 +55,8 @@ export function Problems() {
                     <span className="icon-badge">
                       <Icon />
                     </span>
-                    <h3 className="mt-4 text-h4">{item.title}</h3>
-                    <p className="mt-2 text-body-sm text-ink-secondary">{item.text}</p>
+                    <h3 className="mt-4 max-w-[20ch] text-h4">{item.title}</h3>
+                    <p className="mt-2 max-w-[34rem] text-body-sm text-ink-secondary">{item.text}</p>
                   </li>
                 )
               })}

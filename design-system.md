@@ -6,10 +6,10 @@ Extracted from `context/design2.webp` (personal-brand / coaching landing page), 
 | --- | --- | --- |
 | Primary background | `#FFF5F2` (warm off-white, light theme) | **`#131516`** (near-black, dark theme) |
 | Accent | `#FF5733` (orange-red) | **`#2D6A4F`** (deep green) |
-| Primary font | Geometric grotesque (Helvetica Now / Poppins-class) | **Unbounded** |
-| Secondary font | same family, regular weights | **Inter** |
+| Primary font | Geometric grotesque (Helvetica Now / Poppins-class) | **PP Neue Machina Ultrabold 800** (headings) |
+| Secondary font | same family, regular weights | **Inter** (everything else) |
 
-The *structure* of the source is preserved — full-bleed rounded hero panel, pill buttons, generous white space, editorial two-column blocks, rounded photography. The *tonality* is inverted: what was a light peach canvas with black ink is now a dark canvas with light ink and a green accent.
+The *structure* of the source is preserved — full-bleed hero, generous white space, editorial two-column blocks, rounded photography. The *tonality* is inverted: what was a light peach canvas with black ink is now a dark canvas with light ink and a green accent.
 
 ---
 
@@ -19,7 +19,7 @@ The *structure* of the source is preserved — full-bleed rounded hero panel, pi
 2. **Panels, not pages.** Major sections sit on inset rounded panels (32–40px radius) floating on the base background, rather than edge-to-edge bands.
 3. **Type carries the hierarchy.** Size and weight jumps are large (64 → 48 → 24 → 16). There is no decorative chrome doing hierarchy work.
 4. **Photography is a first-class element.** Every section has a person in it. Images are always rounded, never square-cornered.
-5. **Rounded, soft, pill-shaped.** No sharp corners anywhere. Every interactive element is either a pill or a circle.
+5. **Softened rectangles, not pills.** Every element is a rectangle whose corners are taken off — 4px on the smallest chips up to 16px on panels. Nothing is a capsule and nothing is a circle: the radius removes sharpness, it does not define the shape. This squares the geometry with Neue Machina's own drawing.
 6. **Air.** Section padding is 96–140px vertical. Content columns rarely exceed 560px of text width.
 
 ---
@@ -36,7 +36,7 @@ Cool-cast neutrals derived from the `#131516` base (hue ≈ 195°, sat ≈ 7%).
 | `--surface-1` | `#1A1D1F` | Cards, panels resting on the page. |
 | `--surface-2` | `#212528` | Nested cards, input fields, hover state of `surface-1`. |
 | `--surface-3` | `#282D30` | Pressed states, chips, badges. |
-| `--surface-inverse` | `#F2F5F4` | Inverted pill buttons, "light" CTA blocks. |
+| `--surface-inverse` | `#F2F5F4` | Inverted buttons, "light" CTA blocks. |
 | `--border-subtle` | `#23282A` | Hairlines inside dark cards, table rules. |
 | `--border` | `#2F3538` | Default 1px card/input border. |
 | `--border-strong` | `#3D4448` | Focus-adjacent, ghost button outline. |
@@ -112,26 +112,39 @@ The source hero is a soft peach gradient panel. The dark equivalent keeps the sa
 
 ### 3.1 Families
 
+Two families, split by role — headings carry the voice, everything else stays neutral.
+
 ```css
---font-display: 'Unbounded', 'Inter', system-ui, sans-serif;  /* headings, buttons, numbers */
---font-body:    'Inter', system-ui, -apple-system, sans-serif; /* everything else */
+--font-title:   'PP Neue Machina', <Inter>, system-ui, sans-serif;  /* h1–h4 only */
+--font-display: <Inter>, system-ui, sans-serif;   /* buttons, stat figures, wordmark */
+--font-sans:    <Inter>, system-ui, sans-serif;   /* everything else */
 ```
 
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300..800&family=Inter:wght@400..700&display=swap" rel="stylesheet">
-```
+**PP Neue Machina Ultrabold (800)** sets every heading — a commercial face from
+[Pangram Pangram](https://pangrampangram.com/products/neue-machina), licensed by the client.
 
-Both are variable fonts. Load weights `300–800` for Unbounded and `400–700` for Inter; do not ship static instances of every weight.
+The licensed `.otf` lives in `assets/fonts/` and is converted to `.woff2` for the web
+(60 KB → 33 KB); only the `.woff2` ships, since `.vercelignore` keeps `assets/` out of the
+deploy. It is wired through a plain `@font-face` in `globals.css` rather than
+`next/font/local` — the local loader fails the build if the file is ever missing, whereas
+`@font-face` degrades to the Inter fallback. See `public/fonts/README.md` for the conversion
+command.
 
-**Unbounded runs wide.** It is roughly 15–20% wider per character than the grotesque in the source. Three consequences, all applied in the scale below:
+Cyrillic coverage was verified on the actual file, not taken from the foundry's marketing:
+547 glyphs, `usWeightClass 800`, and every character in the site's real headings present. This
+mattered — every heading here is Russian, so a Latin-only display face would have silently
+fallen back to Inter and changed nothing visible.
 
-- Display sizes are set ~10% smaller than the measured source values so line counts stay the same.
-- Tracking is negative (`-0.02em` to `-0.03em`) at display sizes; Unbounded's default spacing is loose.
-- Headlines cap at **3 lines / ~18 words**. Beyond that, drop a size step rather than wrap further.
+**Only the 800 weight is loaded.** Do not request other weights of Neue Machina; the browser
+would synthesise them. Buttons, stat figures and the wordmark stay on Inter for the same
+reason — an 800 display face at 13–15px reads as a smudge.
 
-Unbounded is never used below 16px and never for paragraphs. Its role is display type, button labels, stat figures, and the nav wordmark.
+Inter is loaded via `next/font/google` (self-hosted at build, subsets `latin` + `cyrillic` +
+`cyrillic-ext`) and covers 400–900 from one variable file.
+
+**Tracking was re-tuned for this face.** The old values (−0.035em display, −0.03em h2) were set
+for Inter Black, whose heavy cuts run tight by default. Neue Machina builds its spacing into the
+drawing, so that much negative tracking collapses it; the scale below eases to −0.02em/−0.018em.
 
 ### 3.2 Scale
 
@@ -139,19 +152,19 @@ Measured off the source artboard (892px render → 1440px design frame) and norm
 
 | Style | Family | Size (desktop / mobile) | Weight | Line height | Tracking |
 | --- | --- | --- | --- | --- | --- |
-| `display` | Unbounded | 64 / 36 | 600 | 1.08 | −0.03em |
-| `h1` | Unbounded | 56 / 34 | 600 | 1.10 | −0.03em |
-| `h2` | Unbounded | 44 / 30 | 600 | 1.15 | −0.02em |
-| `h3` | Unbounded | 28 / 24 | 500 | 1.25 | −0.02em |
-| `h4` / card title | Unbounded | 20 / 18 | 500 | 1.35 | −0.01em |
-| `stat` | Unbounded | 32 / 28 | 700 | 1.10 | −0.02em |
+| `display` | Neue Machina | 64 / 36 | 800 | 1.04 | −0.02em |
+| `h1` | Neue Machina | 56 / 34 | 800 | 1.06 | −0.02em |
+| `h2` | Neue Machina | 44 / 30 | 800 | 1.10 | −0.018em |
+| `h3` | Neue Machina | 28 / 24 | 800 | 1.20 | −0.015em |
+| `h4` / card title | Neue Machina | 20 / 18 | 800 | 1.30 | −0.01em |
+| `stat` | Inter | 32 / 28 | 900 | 1.05 | −0.03em |
 | `body-lg` | Inter | 18 / 17 | 400 | 1.55 | 0 |
 | `body` | Inter | 16 / 16 | 400 | 1.60 | 0 |
 | `body-sm` | Inter | 14 / 14 | 400 | 1.55 | 0 |
 | `label` | Inter | 14 / 14 | 500 | 1.40 | 0.01em |
 | `eyebrow` | Inter | 13 / 13 | 500 | 1.20 | 0.12em, uppercase |
 | `caption` | Inter | 12 / 12 | 400 | 1.45 | 0.01em |
-| `button` | Unbounded | 15 / 15 | 500 | 1.00 | −0.01em |
+| `button` | Inter | 15 / 15 | 500 | 1.00 | −0.01em |
 | `nav-link` | Inter | 16 / 16 | 400 (500 active) | 1.00 | 0 |
 
 Fluid variants for the two largest steps:
@@ -288,13 +301,16 @@ notably a 1px `border` — must be expressed as an inset `box-shadow` instead.
 
 | Token | Value | Applied to |
 | --- | --- | --- |
-| `--radius-xs` | `8px` | Tags, small badges |
-| `--radius-sm` | `12px` | Inputs, small thumbnails |
-| `--radius-md` | `16px` | Blog-card thumbnails |
-| `--radius-lg` | `24px` | Cards, image blocks |
-| `--radius-xl` | `32px` | Large media, feature cards |
-| `--radius-2xl` | `40px` | Hero panel, CTA panel |
-| `--radius-full` | `999px` | All buttons, avatars, icon badges, inputs with trailing button |
+| `--radius-xs` | `4px` | Check bullets, tags, scrollbar thumb |
+| `--radius-sm` | `6px` | Trailing icon chip inside a button, in-field submit |
+| `--radius-md` | `8px` | **Buttons, inputs, icon buttons, icon badges, play button** |
+| `--radius-lg` | `10px` | Menu rows, small blocks |
+| `--radius-xl` | `12px` | Cards, media, modal panel |
+| `--radius-2xl` | `16px` | CTA panel, mobile sheet top corners |
+
+There is no `--radius-full`. Anything that was previously a pill or a circle now takes
+`--radius-md` or smaller. If a new element seems to want a capsule, it is the wrong element for
+this system.
 
 ### 5.2 Borders
 
@@ -318,13 +334,13 @@ On a `#131516` canvas, shadows read as *depth*, not as edges. Keep them soft, la
 
 **Icons.** 20×20 or 24×24, 1.75px stroke, rounded caps and joins (Lucide / Phosphor fit). Glyph color `--accent-400` on dark, `--text-primary` on inverted surfaces.
 
-**Icon badge** (used beside each problem/benefit item): 44px circle, `--surface-2` fill, `1px solid var(--border)`, `--accent-400` glyph. On accent-filled panels: `rgba(255,255,255,0.12)` fill, white glyph.
+**Icon badge** (used beside each problem/benefit item): 44px square at `--radius-md`, `--surface-2` fill, `1px solid var(--border)`, `--accent-400` glyph. On accent-filled panels: `rgba(255,255,255,0.12)` fill, white glyph.
 
-**Check bullet:** 24px filled circle, `--accent-600` fill, white checkmark, `12px` gap to text, top-aligned with the first line.
+**Check bullet:** 24px filled square at `--radius-xs`, `--accent-600` fill, white checkmark, `12px` gap to text, top-aligned with the first line.
 
 **Photography.** Always people, always warm-lit, always in context (studio, office, session) — not cut-out stock. Treatment:
 
-- Radius `--radius-lg` (24px) minimum; `--radius-xl` for hero and feature images.
+- Radius `--radius-xl` (12px) for media; never square-cornered, never heavily rounded.
 - Portrait subjects may bleed **above** the panel they sit in; they never bleed below or outside the left/right panel edges.
 - Any text over an image requires `--gradient-fade`.
 - On dark, apply a subtle unify pass: `filter: saturate(0.95) contrast(1.02)` and a `--white-04` inner ring so edges do not disappear into the background.
@@ -348,19 +364,19 @@ Sits **inside** the hero panel, not above it. Transparent background, `24px` pad
 | Wordmark | Mark 28px + name in Unbounded 20/600, `--text-primary`, `12px` gap |
 | Link | `nav-link` style, `--text-secondary`; active = `--text-primary` + 500 weight |
 | Link hover | `--text-primary`, 160ms |
-| CTA | Inverted pill (§7.2) at the right edge |
+| CTA | Inverted button (§7.2) at the right edge |
 | Scrolled state | `--surface-1` at 80% + `backdrop-filter: blur(16px)`, `1px` bottom border `--border-subtle`, `--shadow-sm` |
 | Mobile | Wordmark + hamburger; menu opens as a full-height `--surface-1` sheet, `--radius-2xl` on the top corners |
 
 ### 7.2 Buttons
 
-All buttons are pills (`--radius-full`), label in Unbounded 15/500, height 48px desktop / 44px mobile, padding `0 28px`.
+All buttons are softened rectangles (`--radius-md`, 8px), label in Inter 15/500, height 48px desktop / 44px mobile, padding `0 28px`.
 
 | Variant | Background | Label | Border | Notes |
 | --- | --- | --- | --- | --- |
 | **Primary** | `--accent-600` | `#FFFFFF` | none | The green replacement for the source's orange CTA. One per section. |
-| **Inverted** | `--surface-inverse` | `--text-inverse` | none | The dark-pill-on-light of the source, flipped. Nav CTA, "Follow Me". |
-| **Secondary** | `transparent` | `--text-primary` | `1px --border-strong` | "Watch More" — outlined pill. |
+| **Inverted** | `--surface-inverse` | `--text-inverse` | none | The dark-on-light button of the source, flipped. Nav CTA. |
+| **Secondary** | `transparent` | `--text-primary` | `1px --border-strong` | Outlined button. |
 | **Ghost** | `--white-04` | `--text-primary` | none | On photographic or accent panels. |
 | **Text link** | — | `--accent-400` | — | Underline on hover, 2px offset. |
 
@@ -373,15 +389,15 @@ focus    outline: 2px solid var(--focus-ring); outline-offset: 3px
 disabled opacity .45, pointer-events none
 ```
 
-**Trailing icon.** Primary and inverted CTAs carry a trailing arrow (`→`) or play glyph in a 32px circle, `16px` after the label:
+**Trailing icon.** Primary and inverted CTAs carry a trailing arrow (`→`) or play glyph in a 32px chip at `--radius-sm`, `16px` after the label:
 
-- On primary (green fill): circle is `#FFFFFF`, glyph `--accent-600`.
-- On inverted (light fill): circle is `--accent-600`, glyph white.
-- The circle is inset — button right padding drops to `8px` when the circle is present.
+- On primary (green fill): chip is `#FFFFFF`, glyph `--accent-600`.
+- On inverted (light fill): chip is `--accent-600`, glyph white.
+- The chip is inset — button right padding drops to `8px` when it is present.
 
-**Icon-only button:** 48px circle, same variant rules, glyph centered.
+**Icon-only button:** 44–48px square at `--radius-md`, same variant rules, glyph centered.
 
-**Play button** (over video/media): 56px circle, `#FFFFFF` fill, `--accent-900` triangle, `--shadow-md`; scales to `1.06` on hover.
+**Play button** (over video/media): 56px square at `--radius-md`, `#FFFFFF` fill, `--accent-900` triangle, `--shadow-md`; scales to `1.06` on hover.
 
 ### 7.3 Cards
 
@@ -401,7 +417,7 @@ The signature element. `--gradient-hero` background, **full-bleed — no viewpor
 corner radius**, `min-height: 600px`, the fixed nav lying over the top of it.
 
 Full-bleed is a hard requirement, not a preference: the nav is a fixed, full-width bar, so an
-inset panel with a 40px radius cuts the corner out from under the nav's CTA pill and the pill
+inset panel with a large radius cuts the corner out from under the nav's CTA button and the button
 floats on the page background. A full-width hero and a full-width nav share the same edges.
 
 ```
@@ -419,15 +435,15 @@ No decorative type sits behind hero content — see §6.
 
 ### 7.5 Inline CTA panel
 
-Full-width `--radius-2xl` panel with `--gradient-panel`, portrait bleeding from the left, headline (`h2`, max 3 lines) and one inverted pill on the right. Vertical padding `80px`. This is the "Follow for proven tips…" block.
+Full-width `--radius-2xl` panel with `--gradient-panel`, portrait bleeding from the left, headline (`h2`, max 3 lines) and one inverted button on the right. Vertical padding `80px`. This is the "Follow for proven tips…" block.
 
 ### 7.6 Forms
 
-**Text input:** height 52px, `--surface-2`, `1px solid --border`, `--radius-full`, padding `0 20px`, `body` text `--text-primary`, placeholder `--text-muted`.
+**Text input:** height 52px, `--surface-2`, `1px solid --border`, `--radius-md`, padding `0 20px`, `body` text `--text-primary`, placeholder `--text-muted`.
 Focus: border `--accent-400` + `0 0 0 3px var(--focus-ring)`.
 Error: border `--danger`, message in `caption` `--danger`, `8px` below.
 
-**Input with trailing button** (newsletter): the submit is a 40px `--accent-600` circle with a white arrow, inset `6px` from the right edge; input right padding `56px`.
+**Input with trailing button**: the submit is a 40px `--accent-600` square at `--radius-sm` with a white arrow, inset `6px` from the right edge; input right padding `56px`.
 
 **Textarea:** same, `--radius-lg`, min-height 140px, padding `16px 20px`.
 
@@ -448,7 +464,7 @@ An oversized ghost wordmark in `rgba(255,255,255,0.03)` may bleed off the bottom
                                  (13px, so --text-muted is off-limits per §2.2)
 [heading]  h2, one phrase in --accent-400
 [body]     body-lg, --text-secondary, 36rem max
-[action]   optional secondary pill, right-aligned on desktop
+[action]   optional secondary button, right-aligned on desktop
 ```
 
 ---
@@ -480,7 +496,7 @@ JavaScript. Motion is reserved for direct interaction.
 1. Body text ≥ 16px; `--text-secondary` is the floor for prose (8.5 : 1).
 2. `--accent-600` is a fill color only. Accent *text* is `--accent-400` (7.4 : 1). Verified in §2.3.
 3. Focus is always visible: `2px` `--focus-ring` outline at `3px` offset. Never `outline: none` without a replacement.
-4. Interactive targets ≥ 44×44px, including the trailing icon circles. Where a spec'd control is
+4. Interactive targets ≥ 44×44px, including the trailing icon chips. Where a spec'd control is
    smaller — the 40px newsletter submit (§7.6) — keep the visual size and expand the hit area with
    an inset pseudo-element. Inline nav links carry `min-height: 44px` without changing their
    visual height.
@@ -573,9 +589,8 @@ JavaScript. Motion is reserved for direct interaction.
   --space-30: 120px; --space-40: 160px;
 
   /* ---- radius ---- */
-  --radius-xs: 8px;   --radius-sm: 12px;  --radius-md: 16px;
-  --radius-lg: 24px;  --radius-xl: 32px;  --radius-2xl: 40px;
-  --radius-full: 999px;
+  --radius-xs: 4px;   --radius-sm: 6px;   --radius-md: 8px;
+  --radius-lg: 10px;  --radius-xl: 12px;  --radius-2xl: 16px;
 
   /* ---- shadow ---- */
   --shadow-sm: 0 2px 8px rgba(0,0,0,0.30);
@@ -634,7 +649,7 @@ fontFamily: {
   display: ['Unbounded', 'Inter', 'system-ui', 'sans-serif'],
   sans: ['Inter', 'system-ui', 'sans-serif'],
 },
-borderRadius: { xs:'8px', sm:'12px', md:'16px', lg:'24px', xl:'32px', '2xl':'40px', full:'999px' },
+borderRadius: { xs:'4px', sm:'6px', md:'8px', lg:'10px', xl:'12px', '2xl':'16px' },
 ```
 
 ---
@@ -646,7 +661,7 @@ Things that do **not** translate literally from the light source design and were
 | Source behavior | Why it breaks on dark | Resolution |
 | --- | --- | --- |
 | Orange used as both fill and heading ink | `#2D6A4F` as ink is 2.9 : 1 on `#131516` | Split into `--accent-600` (fill) and `--accent-400` (ink) |
-| Dark pill button on light background | No longer contrasts | Inverted to a light pill (`--surface-inverse`) with dark label |
+| Dark button on light background | No longer contrasts | Inverted to a light button (`--surface-inverse`) with dark label |
 | Elevation via white cards on off-white page | Nothing is white anymore | Elevation via progressively lighter surfaces (`--surface-1/2/3`) |
 | Peach hero gradient | Would glow against a near-black page | Deep-green `--gradient-hero`, same 135° 3-stop structure |
 | Photos on white, no edge treatment | Dark photo edges vanish into `--bg` | `--white-04` inner ring + slight contrast lift |

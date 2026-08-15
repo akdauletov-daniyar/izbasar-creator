@@ -1,17 +1,16 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter, Unbounded } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { site } from '@/content/site'
 import { siteUrl } from '@/lib/site-url'
 import './globals.css'
 
-/* Основной шрифт — заголовки, кнопки, цифры (design-system.md §3.1) */
-const unbounded = Unbounded({
-  subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
-  variable: '--font-unbounded',
-  display: 'swap',
-})
-
-/* Вторичный шрифт — весь текст */
+/*
+ * Inter — текст, кнопки, цифры и знак (design-system.md §3.1). Заголовки
+ * набраны PP Neue Machina Ultrabold: шрифт коммерческий, подключён через
+ * @font-face в globals.css, файл кладётся в public/fonts (см. README там же).
+ * Inter остаётся запасным для заголовков, поэтому вся ось насыщенности
+ * до 800 всё ещё нужна — переменный файл отдаёт её без доп. запросов.
+ */
 const inter = Inter({
   subsets: ['latin', 'cyrillic', 'cyrillic-ext'],
   variable: '--font-inter',
@@ -78,11 +77,11 @@ const personSchema = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ru" className={`${unbounded.variable} ${inter.variable}`}>
+    <html lang="ru" className={inter.variable}>
       <body>
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-200 focus:rounded-full focus:bg-surface-inverse focus:px-6 focus:py-3 focus:text-ink-inverse"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-200 focus:rounded-md focus:bg-surface-inverse focus:px-6 focus:py-3 focus:text-ink-inverse"
         >
           Перейти к содержимому
         </a>

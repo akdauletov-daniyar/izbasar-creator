@@ -75,7 +75,7 @@ export function Nav() {
               className="-my-2 flex items-center py-2 text-ink"
               aria-label={`${site.name} — на главную`}
             >
-              <span className="font-display text-[1.0625rem] font-semibold tracking-[-0.02em] lg:text-xl">
+              <span className="font-display text-[1.0625rem] font-black tracking-[-0.03em] lg:text-xl">
                 {site.shortName}
               </span>
             </a>
@@ -100,7 +100,7 @@ export function Nav() {
 
               <button
                 type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink lg:hidden"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line text-ink lg:hidden"
                 aria-label="Открыть меню"
                 aria-expanded={open}
                 onClick={() => setOpen(true)}
@@ -133,7 +133,7 @@ export function Nav() {
             <span className="eyebrow eyebrow-center">Меню</span>
             <button
               type="button"
-              className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink"
+              className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line text-ink"
               aria-label="Закрыть меню"
               onClick={() => setOpen(false)}
             >

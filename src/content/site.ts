@@ -16,7 +16,8 @@ export const TODO = 'Уточняется'
 
 export const site = {
   name: 'Избасар Мамыров',
-  shortName: 'Избасар',
+  /** Знак в шапке и подвале */
+  shortName: 'Mamyrov',
   locale: 'ru_RU',
 
   meta: {
@@ -52,9 +53,12 @@ export const site = {
       'Помогаю разобраться, почему одни и те же ситуации повторяются снова и снова — и что конкретно можно изменить.',
     primaryCta: { label: 'Записаться на консультацию', href: '#consultation' },
     secondaryCta: { label: 'Смотреть видео · 16 мин', href: '#video' },
+    /* accent — регалии выделяются цветом, числа остаются светлыми */
     stats: [
-      { value: '300+', label: 'практик и консультаций' },
-      { value: '100+', label: 'клиентов' },
+      { value: '+300', label: 'Практик и консультаций', accent: false },
+      { value: '+100', label: 'Довольных клиентов', accent: false },
+      { value: 'ICF', label: 'Сертифицированный коуч', accent: true },
+      { value: 'КПТ', label: 'Дипломированный психолог', accent: true },
     ],
     portrait: {
       src: '/images/izbasar_suit.jpg',
@@ -90,10 +94,6 @@ export const site = {
         text: 'Решения диктуют страхи, чужие ожидания и старые установки, а не твой собственный выбор.',
       },
     ],
-    image: {
-      src: '/images/hero_portrait.jpg',
-      alt: 'Избасар Мамыров',
-    },
   },
 
   about: {

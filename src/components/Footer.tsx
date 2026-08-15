@@ -19,7 +19,7 @@ export function Footer() {
         <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-[22rem]">
             <div className="flex items-center">
-              <span className="font-display text-xl font-semibold tracking-[-0.02em] text-ink">
+              <span className="font-display text-xl font-black tracking-[-0.03em] text-ink">
                 {site.shortName}
               </span>
             </div>
@@ -35,7 +35,7 @@ export function Footer() {
                   target={key === 'email' ? undefined : '_blank'}
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-ink-secondary transition-colors hover:border-accent-400 hover:text-accent-400"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line text-ink-secondary transition-colors hover:border-accent-400 hover:text-accent-400"
                 >
                   <Icon />
                 </a>
