@@ -61,7 +61,7 @@ export const site = {
       { value: 'КПТ', label: 'Дипломированный психолог', accent: true },
     ],
     portrait: {
-      src: '/images/izbasar_suit.jpg',
+      src: '/images/hero_portrait.webp',
       alt: 'Избасар Мамыров — психолог и ICF-коуч',
     },
   },
@@ -111,7 +111,7 @@ export const site = {
     ],
     cta: { label: 'Записаться на консультацию', href: '#consultation' },
     image: {
-      src: '/images/about_portrait.jpg',
+      src: '/images/studio_shot.webp',
       alt: 'Избасар Мамыров',
     },
     approach: {
@@ -155,7 +155,7 @@ export const site = {
     embedUrl:
       'https://www.youtube.com/embed/9SkViTOsVJ8?autoplay=1&rel=0&modestbranding=1&playsinline=1',
     poster: {
-      src: '/images/camera_monitor.jpg',
+      src: '/images/camera_monitor.webp',
       alt: 'Съёмка видео «Как изменить свою жизнь через изменение состояния»',
     },
   },
@@ -214,7 +214,7 @@ export const site = {
       'Ты приходишь со своей ситуацией — мы вместе разбираем её до тех пор, пока не появляется ясность: что происходит, почему происходит и что с этим делать.',
     cta: { label: 'Записаться на консультацию' },
     image: {
-      src: '/images/studio_recording.jpg',
+      src: '/images/studio_recording.webp',
       alt: 'Избасар Мамыров на записи',
     },
   },
@@ -245,7 +245,7 @@ export const site = {
     text: 'Приходи со своей ситуацией — разберём её до ясности.',
     cta: { label: 'Записаться на консультацию', href: '#consultation' },
     image: {
-      src: '/images/hero_portrait.jpg',
+      src: '/images/on_horse.webp',
       alt: 'Избасар Мамыров',
     },
   },

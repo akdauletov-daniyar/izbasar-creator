@@ -61,6 +61,8 @@ export function VideoSection() {
                 src={video.poster.src}
                 alt={video.poster.alt}
                 fill
+
+                quality={90}
                 sizes="(max-width: 767px) 92vw, (max-width: 1023px) 92vw, 58vw"
                 className="object-cover object-[center_72%] transition-transform duration-[420ms] ease-[var(--ease-soft)] group-hover:scale-[1.02]"
               />

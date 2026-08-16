@@ -71,6 +71,8 @@ export function Consultation() {
                   src={consultation.image.src}
                   alt={consultation.image.alt}
                   fill
+
+                  quality={90}
                   sizes="(max-width: 767px) 92vw, (max-width: 1023px) 46vw, 40vw"
                   className="object-cover object-[center_35%]"
                 />

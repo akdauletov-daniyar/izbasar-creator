@@ -17,6 +17,8 @@ export function About() {
                 src={about.image.src}
                 alt={about.image.alt}
                 fill
+
+                quality={90}
                 sizes="(max-width: 767px) 92vw, 42vw"
                 className="object-cover"
               />

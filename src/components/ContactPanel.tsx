@@ -40,13 +40,18 @@ export function ContactPanel() {
                   src={ctaPanel.image.src}
                   alt={ctaPanel.image.alt}
                   fill
+
+                  quality={90}
                   sizes="(max-width: 1024px) 100vw, 40vw"
-                  className="object-cover object-[center_25%] [filter:saturate(0.45)_contrast(1.04)] [mask-image:linear-gradient(to_bottom,#000_72%,transparent_100%)] md:[mask-image:linear-gradient(to_right,#000_70%,transparent_100%)]"
+                  className="object-cover object-[center_30%] [filter:saturate(0.9)] [mask-image:linear-gradient(to_bottom,#000_72%,transparent_100%)] md:[mask-image:linear-gradient(to_right,#000_70%,transparent_100%)]"
                 />
-                {/* Приводим кадр к зелёной гамме панели */}
+                {/* Лёгкое затемнение из глубины панели, чтобы дневной кадр
+                    не спорил с тёмной поверхностью. Прежний зелёный
+                    mix-blend-color был подобран под тёмный кадр и превращал
+                    дневную фотографию в бледный призрак. */}
                 <span
                   aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 bg-accent-900/45 mix-blend-color"
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-l from-accent-900/50 via-transparent to-transparent"
                 />
               </div>
 

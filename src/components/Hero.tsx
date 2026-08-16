@@ -72,6 +72,8 @@ export function Hero() {
               src={hero.portrait.src}
               alt={hero.portrait.alt}
               fill
+
+              quality={90}
               priority
               sizes="(max-width: 767px) 92vw, (max-width: 1023px) 88vw, 44vw"
               className="object-cover object-top md:object-[center_28%] lg:object-top [mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)] md:[mask-image:none] lg:[mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)]"
