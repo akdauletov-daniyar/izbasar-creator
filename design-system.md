@@ -451,11 +451,8 @@ Error: border `--danger`, message in `caption` `--danger`, `8px` below.
 
 ### 7.7 Footer
 
-`--bg` background, `1px` top border `--border-subtle`, `80px` top padding.
-Row 1: newsletter block right-aligned, heading in `h4`.
-Row 2: nav links spread edge to edge, `nav-link` style in `--text-secondary`.
-Row 3: `1px --border-subtle` divider, then legal text at `body-sm` in `--text-muted`, right-aligned — 14px is the floor for `--text-muted` (§2.2), so this row does not drop to `caption`.
-An oversized ghost wordmark in `rgba(255,255,255,0.03)` may bleed off the bottom edge.
+**Removed.** The page ends on the contact panel — the closing CTA is the last thing a visitor
+sees, and nothing below it competes for attention. Site identity lives in the fixed nav.
 
 ### 7.8 Section header
 

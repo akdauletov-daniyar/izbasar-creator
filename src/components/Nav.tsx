@@ -69,23 +69,14 @@ export function Nav() {
         }`}
       >
         <div className="container-page">
-          <div className="flex h-[72px] items-center justify-between gap-6 lg:h-20 lg:gap-8">
-            <a
-              href="#top"
-              className="-my-2 flex items-center py-2 text-ink"
-              aria-label={`${site.name} — на главную`}
-            >
-              <span className="font-display text-[1.0625rem] font-black tracking-[-0.03em] lg:text-xl">
-                {site.shortName}
-              </span>
-            </a>
-
-            <nav className="hidden items-center gap-8 lg:flex" aria-label="Основная навигация">
+          {/* Компактная шапка 48px: только ссылки справа (бургер на мобильном) */}
+          <div className="flex h-12 items-center justify-end gap-6 lg:gap-8">
+            <nav className="hidden items-center gap-7 lg:flex" aria-label="Основная навигация">
               {site.nav.map((item) => (
                 <a
                   key={item.href}
                   href={item.href}
-                  className="nav-link"
+                  className="nav-link text-[0.9375rem]"
                   aria-current={active === item.href ? 'true' : undefined}
                 >
                   {item.label}
@@ -93,21 +84,17 @@ export function Nav() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-3">
-              <Button href="#consultation" variant="inverted" className="hidden sm:inline-flex">
-                Записаться
-              </Button>
-
-              <button
-                type="button"
-                className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-line text-ink lg:hidden"
-                aria-label="Открыть меню"
-                aria-expanded={open}
-                onClick={() => setOpen(true)}
-              >
-                <Menu />
-              </button>
-            </div>
+            {/* Кнопка меню чуть меньше высоты шапки; зону нажатия до 44px
+                добирает прозрачный ::after у .nav-burger */}
+            <button
+              type="button"
+              className="nav-burger relative inline-flex h-9 w-9 items-center justify-center rounded-sm border border-line text-ink lg:hidden"
+              aria-label="Открыть меню"
+              aria-expanded={open}
+              onClick={() => setOpen(true)}
+            >
+              <Menu width={18} height={18} />
+            </button>
           </div>
         </div>
       </header>
@@ -124,10 +111,11 @@ export function Nav() {
           onClick={() => setOpen(false)}
         />
 
+        {/* Позиция листа — инлайн-стилем: утилита translate-y-0 в этой сборке
+            не срабатывала (класс менялся, стиль — нет), и меню не открывалось */}
         <div
-          className={`absolute inset-x-0 bottom-0 top-16 flex flex-col overflow-y-auto overscroll-contain rounded-t-2xl border-t border-line bg-surface-1 px-6 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] transition-transform duration-[420ms] ease-[var(--ease-soft)] ${
-            open ? 'translate-y-0' : 'translate-y-full'
-          }`}
+          style={{ transform: open ? 'translateY(0)' : 'translateY(100%)' }}
+          className="absolute inset-x-0 bottom-0 top-12 flex flex-col overflow-y-auto overscroll-contain rounded-t-2xl border-t border-line bg-surface-1 px-6 pt-6 pb-[max(2rem,env(safe-area-inset-bottom))] transition-transform duration-[420ms] ease-[var(--ease-soft)]"
         >
           <div className="flex items-center justify-between">
             <span className="eyebrow eyebrow-center">Меню</span>

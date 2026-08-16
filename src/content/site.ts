@@ -16,8 +16,6 @@ export const TODO = 'Уточняется'
 
 export const site = {
   name: 'Избасар Мамыров',
-  /** Знак в шапке и подвале */
-  shortName: 'Mamyrov',
   locale: 'ru_RU',
 
   meta: {
@@ -61,8 +59,8 @@ export const site = {
       { value: 'КПТ', label: 'Дипломированный психолог', accent: true },
     ],
     portrait: {
-      src: '/images/hero_portrait.webp',
-      alt: 'Избасар Мамыров — психолог и ICF-коуч',
+      src: '/images/camera_monitor.webp',
+      alt: 'Избасар Мамыров в кадре — съёмка видео о психологии',
     },
   },
 
@@ -233,10 +231,12 @@ export const site = {
       'видеть связь между мыслями, эмоциями и действиями;',
       'постепенно формировать новое отношение к себе и своей жизни.',
     ],
-    ctaLead: 'Нажми — откроется WhatsApp с готовым сообщением. Пришлю книгу в ответ.',
-    note: 'Книга бесплатная. Ничего заполнять не нужно.',
-    cta: { label: 'Получить книгу' },
-    whatsappMessage: 'Здравствуйте! Хочу получить бесплатную книгу.',
+    ctaLead: 'Нажми — и книга сразу скачается. Без форм и ожидания.',
+    cta: { label: 'Скачать книгу' },
+    file: {
+      href: '/files/kniga-izmeneniy.pdf',
+      downloadName: 'Книга изменений.pdf',
+    },
   },
 
   ctaPanel: {
@@ -250,12 +250,6 @@ export const site = {
     },
   },
 
-  footer: {
-    tagline: 'Психолог, КПТ-терапевт и ICF-коуч. Консультации онлайн.',
-    newsletterTitle: 'Забрать бесплатную книгу',
-    legal: 'Все права защищены.',
-    policy: 'Политика конфиденциальности',
-  },
 } as const
 
 export type Site = typeof site

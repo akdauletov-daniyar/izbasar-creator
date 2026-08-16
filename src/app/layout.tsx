@@ -78,7 +78,9 @@ const personSchema = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className={inter.variable}>
-      <body>
+      {/* zoom: 0.9 — весь сайт на 10% мельче; инлайн, потому что Lightning CSS
+          вырезает zoom из stylesheet как IE-хак (подробнее в globals.css) */}
+      <body style={{ zoom: 0.9 }}>
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-5 focus:top-5 focus:z-200 focus:rounded-md focus:bg-surface-inverse focus:px-6 focus:py-3 focus:text-ink-inverse"

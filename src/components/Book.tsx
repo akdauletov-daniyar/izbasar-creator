@@ -4,13 +4,11 @@ import { Check } from './ui/Icons'
 
 /**
  * Раздел «Бесплатная книга».
- * Книгу забирают одним нажатием через WhatsApp — ничего вводить не нужно,
- * поэтому раздел статический и не тянет клиентский JS.
+ * Книга скачивается напрямую одним нажатием (PDF из public/files) —
+ * без форм и мессенджеров, раздел статический и не тянет клиентский JS.
  */
 export function Book() {
-  const { book, contacts } = site
-
-  const whatsappHref = `${contacts.whatsapp}?text=${encodeURIComponent(book.whatsappMessage)}`
+  const { book } = site
 
   return (
     <section id="book" className="section pt-0 lg:pt-0">
@@ -41,23 +39,18 @@ export function Book() {
               </ul>
             </div>
 
-            {/* Получение книги — одна кнопка в WhatsApp */}
+            {/* Получение книги — прямое скачивание PDF */}
             <div className="w-full lg:col-span-5 lg:ml-auto lg:max-w-[380px] lg:self-start">
               <h3 className="text-h4">{book.cta.label}</h3>
               <p className="mt-2 text-body-sm text-ink-secondary">{book.ctaLead}</p>
 
               <div className="mt-6">
-                <Button
-                  href={whatsappHref}
-                  variant="primary"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                {/* download с кириллическим именем — файл сохранится как
+                    «Книга изменений.pdf», а не как kniga-izmeneniy.pdf */}
+                <Button href={book.file.href} variant="primary" download={book.file.downloadName}>
                   {book.cta.label}
                 </Button>
               </div>
-
-              <p className="mt-4 text-body-sm text-ink-muted">{book.note}</p>
             </div>
           </div>
         </div>

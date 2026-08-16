@@ -198,7 +198,8 @@
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 96px;
+    /* Шапка 48px (визуально ~43px при zoom 0.9) + зазор под якорями */
+    scroll-padding-top: 64px;
     background-color: var(--color-bg);
     -webkit-tap-highlight-color: transparent;
   }
@@ -212,6 +213,14 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
+    /*
+     * Весь сайт уменьшен на 10% через zoom: 0.9 — но задано это инлайн-стилем
+     * на <body> в layout.tsx, не здесь: Lightning CSS (минификатор Tailwind v4)
+     * вырезает zoom из таблиц стилей как легаси-хак IE.
+     * Почему zoom, а не font-size на корне: токены смешивают rem и px,
+     * и уменьшение корня сжало бы только текст, оставив кнопки и высоты
+     * блоков прежними. zoom масштабирует всё равномерно (Baseline 2024).
+     */
   }
 
   h1,
@@ -706,6 +715,14 @@
     font-size: var(--text-body);
     color: var(--color-ink-secondary);
     transition: color var(--dur-fast) var(--ease-soft);
+  }
+
+  /* Кнопка меню в 48px-шапке визуально 36px; невидимая рамка ::after
+     доводит зону нажатия до 44px (§9.4) */
+  .nav-burger::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
   }
   .nav-link:hover,
   .nav-link[aria-current='true'] {

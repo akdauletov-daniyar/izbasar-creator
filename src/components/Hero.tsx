@@ -12,7 +12,9 @@ export function Hero() {
 
   return (
     <section id="top" className="panel-hero min-h-[600px] lg:min-h-[680px]">
-      <div className="container-page relative z-10 grid grid-cols-1 items-end gap-10 pb-14 pt-28 md:gap-12 md:pb-16 lg:grid-cols-12 lg:gap-8 lg:pt-32">
+      {/* Верхний отступ считается от шапки 48px: ~24px зазора на телефоне,
+          ~40px на десктопе */}
+      <div className="container-page relative z-10 grid grid-cols-1 items-end gap-10 pb-14 pt-18 md:gap-12 md:pb-16 lg:grid-cols-12 lg:gap-8 lg:pt-22">
         {/* Текстовая колонка — 6/12 */}
         <div className="lg:col-span-6 lg:pb-4">
           <span className="eyebrow text-accent-200">{hero.eyebrow}</span>
@@ -76,7 +78,7 @@ export function Hero() {
               quality={90}
               priority
               sizes="(max-width: 767px) 92vw, (max-width: 1023px) 88vw, 44vw"
-              className="object-cover object-top md:object-[center_28%] lg:object-top [mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)] md:[mask-image:none] lg:[mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)]"
+              className="object-cover object-[center_55%] [mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)] md:[mask-image:none] lg:[mask-image:linear-gradient(to_bottom,#000_62%,transparent_98%)]"
             />
           </div>
         </div>
